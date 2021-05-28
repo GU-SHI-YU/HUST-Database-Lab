@@ -6,17 +6,16 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "product")
-public class Product {
+@Table(name = "product_type")
+public class ProductType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
-    private String name;
-    private String description;
-    private Double price;
-    private String picture;
+    @Column(name = "product_id")
+    private Integer productId;
+    @Column(name = "type_id")
+    private Integer typeId;
 
 }

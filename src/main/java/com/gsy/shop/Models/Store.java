@@ -16,6 +16,7 @@ public class Store {
     @Column
     private String name;
     private String description;
-    private Integer tid;
+    @Column(name = "owner_id")
+    private Integer ownerId;
 
 }
