@@ -17,8 +17,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
-    private Double amount;
     @Enumerated(EnumType.STRING)
     @ColumnDefault("\"CREATED\"")
     private Status status;

@@ -2,9 +2,10 @@ package com.gsy.shop.Controllers;
 
 import com.gsy.shop.Models.User;
 import com.gsy.shop.Services.UserService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -15,6 +16,31 @@ public class UserController {
     public UserController(UserService userService) {
 
         this.userService = userService;
+    }
+
+    @PostMapping("/user/new")
+    public User addUser(@RequestBody User user) {
+
+        return userService.addUser(user);
+    }
+
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable("id") Integer id) {
+
+        return userService.getUser(id);
+    }
+
+    @PutMapping("/user/{id}")
+    public User updateUser(@PathVariable("id") Integer id, @RequestBody User newUser) {
+
+        return userService.updateUser(id, newUser);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Integer id) {
+
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping("/test/user")

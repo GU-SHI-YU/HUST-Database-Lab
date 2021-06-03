@@ -21,9 +21,6 @@ public class OrderController {
     public String saveOrder() {
 
         Order order = new Order();
-        order.setAmount(1.0);
-
-        orderService.addOrder(order);
         return "order add success";
     }
 }
