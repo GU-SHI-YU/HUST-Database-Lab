@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IProductDAO extends JpaRepository<Product, Integer> {
 
-    public List<Product> findByOrderByPriceAsc();
-    public List<Product> findByOrderByNameAsc();
-    public List<Product> findByOrderByIdAsc();
+    List<Product> findByOrderByPriceAsc();
+    List<Product> findByOrderByNameAsc();
+    List<Product> findByOrderByIdAsc();
 }

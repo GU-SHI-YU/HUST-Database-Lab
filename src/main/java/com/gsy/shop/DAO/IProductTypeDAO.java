@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IProductTypeDAO extends JpaRepository<ProductType, Integer> {
 
-    public List<Integer> findAllByTypeId(@NonNull Integer id);
+    List<Integer> findAllByTypeId(@NonNull Integer id);
 }

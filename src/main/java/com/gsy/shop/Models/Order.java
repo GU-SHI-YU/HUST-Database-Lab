@@ -24,7 +24,7 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     @Generated(GenerationTime.INSERT)
     private Date createdTime;
-    @Column(name = "purchase_time")
+    @Column(name = "purchased_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date purchasedTime;
     @Column(name = "confirmed_time")

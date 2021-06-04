@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IStoreDAO extends JpaRepository<Store, Integer> {
 
-    public List<Store> findByOrderByIdAsc();
-    public List<Store> findByOrderByNameAsc();
+    List<Store> findByOrderByIdAsc();
+    List<Store> findByOrderByNameAsc();
 }

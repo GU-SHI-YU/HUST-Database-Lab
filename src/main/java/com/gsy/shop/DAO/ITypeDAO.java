@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ITypeDAO extends JpaRepository<Type, Integer> {
 
-    public Optional<Type> findByName(@NonNull String name);
+    Optional<Type> findByName(@NonNull String name);
 }

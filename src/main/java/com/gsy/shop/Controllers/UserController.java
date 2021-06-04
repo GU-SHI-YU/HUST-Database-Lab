@@ -1,11 +1,13 @@
 package com.gsy.shop.Controllers;
 
+import com.gsy.shop.Models.Order;
 import com.gsy.shop.Models.User;
 import com.gsy.shop.Services.UserService;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -18,7 +20,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user/new")
+    @GetMapping("/user/orders/{id}")
+    public List<Order> getUserOrder(@PathVariable("id") Integer id) {
+
+        return userService.getUserOrder(id);
+    }
+
+    @PostMapping("/user/add")
     public User addUser(@RequestBody User user) {
 
         return userService.addUser(user);

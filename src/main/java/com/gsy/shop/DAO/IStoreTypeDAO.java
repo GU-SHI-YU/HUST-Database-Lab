@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IStoreTypeDAO extends JpaRepository<StoreType, Integer> {
 
-    public List<Integer> findAllByTypeId(@NonNull Integer id);
+    List<Integer> findAllByTypeId(@NonNull Integer id);
 }
