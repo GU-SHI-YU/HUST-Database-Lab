@@ -11,41 +11,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 public class UserService {
 
     private final IUserDAO userDAO;
-    private final IOrderRecordDAO orderRecordDAO;
+    private final IOrderRecordViewDAO orderRecordViewDAO;
     private final IOrderDAO orderDAO;
 
 
     @Autowired
     public UserService(IUserDAO userDAO,
-                       IOrderRecordDAO orderRecordDAO,
-                       IOrderItemDAO orderItemDAO,
-                       IOrderDAO orderDAO,
-                       IStoreItemDAO storeItemDao,
-                       IProductDAO productDAO) {
+                       IOrderRecordViewDAO orderRecordViewDAO,
+                       IOrderDAO orderDAO) {
 
         this.userDAO = userDAO;
-        this.orderRecordDAO = orderRecordDAO;
+        this.orderRecordViewDAO = orderRecordViewDAO;
         this.orderDAO = orderDAO;
     }
 
-    @Transactional
     public void deleteUser(@NonNull Integer id) {
 
         User user = userDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         userDAO.delete(user);
     }
 
-    @Transactional
     public User getUser(@NonNull Integer id) {
 
         return userDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
-    @Transactional
     public User updateUser(@NonNull Integer id, @NonNull User newUser) {
 
         User user = userDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "new user", newUser));
@@ -57,19 +52,23 @@ public class UserService {
         return userDAO.save(user);
     }
 
-    @Transactional
     public User addUser(User user) {
 
         return userDAO.save(user);
     }
 
-    @Transactional
     public List<Order> getUserOrder(@NonNull Integer id) {
 
-        List<OrderRecord> orderRecords = orderRecordDAO.findAllByUserId(id);
+        List<OrderRecordView> orderRecordViews = orderRecordViewDAO.findAllByUserId(id);
         List<Order> orders = new ArrayList<>();
-        orderRecords.forEach(orderRecord -> orders.add(orderDAO.findById(orderRecord.getOrderId())
+        orderRecordViews.forEach(orderRecordView -> orders.add(orderDAO.findById(orderRecordView.getId())
             .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id))));
         return orders;
+    }
+
+    public User login(@NonNull String email, @NonNull String password) {
+
+        return userDAO.findUserByEmailAndPassword(email, password)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "email, password", email + "," + password));
     }
 }

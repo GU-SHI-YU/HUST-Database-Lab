@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -31,20 +32,17 @@ public class ProductService {
         this.productTypeDAO = productTypeDAO;
     }
 
-    @Transactional
     public Product getProduct(@NonNull Integer id) {
 
         return productDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
     }
 
-    @Transactional
     public void deleteProduct(@NonNull Integer id) {
 
         Product product = productDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
         productDAO.delete(product);
     }
 
-    @Transactional
     public Product updateProduct(@NonNull Integer id, Product newProduct) {
 
         Product product = productDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
@@ -55,13 +53,11 @@ public class ProductService {
         return productDAO.save(product);
     }
 
-    @Transactional
     public Product addProduct(@NonNull Product product) {
 
         return productDAO.save(product);
     }
 
-    @Transactional
     public List<Product> getProductByType(@NonNull String name) {
 
         Integer typeId = typeDAO.findByName(name)
@@ -75,7 +71,6 @@ public class ProductService {
         return products;
     }
 
-    @Transactional
     public List<Product> getProductOrdered(@NonNull String columnName, @NonNull Boolean isAsc) {
 
         List<Product> products = productDAO.findByOrderByIdAsc();

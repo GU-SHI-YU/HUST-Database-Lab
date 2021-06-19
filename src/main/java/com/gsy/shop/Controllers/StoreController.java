@@ -1,8 +1,8 @@
 package com.gsy.shop.Controllers;
 
-import com.gsy.shop.Models.Product;
 import com.gsy.shop.Models.Store;
 import com.gsy.shop.Models.StoreItem;
+import com.gsy.shop.Models.StoreItemDetailView;
 import com.gsy.shop.Services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class StoreController {
 
@@ -76,5 +77,11 @@ public class StoreController {
 
         storeService.addStore(store);
         return "store add success";
+    }
+
+    @GetMapping("/store/items/{id}")
+    public List<StoreItemDetailView> getItem(@PathVariable("id") Integer id) {
+
+        return storeService.getItems(id);
     }
 }

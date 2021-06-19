@@ -4,6 +4,7 @@ import com.gsy.shop.DAO.*;
 import com.gsy.shop.Exception.ResourceNotFoundException;
 import com.gsy.shop.Models.Store;
 import com.gsy.shop.Models.StoreItem;
+import com.gsy.shop.Models.StoreItemDetailView;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Transactional
 @Service
 public class StoreService {
 
@@ -21,29 +23,31 @@ public class StoreService {
     private final IProductDAO productDAO;
     private final IStoreTypeDAO storeTypeDAO;
     private final ITypeDAO typeDAO;
+    private final IStoreItemDetailViewDAO storeItemDetailViewDAO;
 
     @Autowired
     public StoreService(IStoreDAO storeDAO,
                         IStoreItemDAO storeItemDAO,
                         IStoreTypeDAO storeTypeDAO,
                         ITypeDAO typeDAO,
-                        IProductDAO productDAO) {
+                        IProductDAO productDAO,
+                        IStoreItemDetailViewDAO storeItemDetailViewDAO) {
 
         this.storeDAO = storeDAO;
         this.storeItemDAO = storeItemDAO;
         this.storeTypeDAO = storeTypeDAO;
         this.typeDAO = typeDAO;
         this.productDAO = productDAO;
+        this.storeItemDetailViewDAO = storeItemDetailViewDAO;
     }
 
-    @Transactional
+
     public void deleteStore(@NonNull Integer id) {
 
         Store store = storeDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", "id", id));
         storeDAO.delete(store);
     }
 
-    @Transactional
     public Store updateStore(@NonNull Integer id, @NonNull Store newStore) {
 
         Store store = storeDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", "id", id));
@@ -53,19 +57,16 @@ public class StoreService {
         return storeDAO.save(store);
     }
 
-    @Transactional
     public Store getStore(@NonNull Integer id) {
 
         return storeDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", "id", id));
     }
 
-    @Transactional
     public Store addStore(@NonNull Store store) {
 
        return storeDAO.save(store);
     }
 
-    @Transactional
     public List<Store> getStoreByType(@NonNull String name) {
 
         Integer typeId = typeDAO.findByName(name)
@@ -81,7 +82,6 @@ public class StoreService {
         return stores;
     }
 
-    @Transactional
     public List<Store> getStoreOrdered(@NonNull String columnName, @NonNull Boolean isAsc) {
 
         List<Store> stores = storeDAO.findByOrderByIdAsc();
@@ -98,11 +98,15 @@ public class StoreService {
         return stores;
     }
 
-    @Transactional
     public StoreItem addItem(@NonNull StoreItem storeItem) {
 
         Integer productId = storeItem.getProductId();
         productDAO.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         return storeItemDAO.save(storeItem);
+    }
+
+    public List<StoreItemDetailView> getItems(@NonNull Integer id) {
+
+        return storeItemDetailViewDAO.findAllByStoreId(id);
     }
 }

@@ -1,14 +1,17 @@
 package com.gsy.shop.Controllers;
 
 import com.gsy.shop.Models.Order;
+import com.gsy.shop.Models.OrderItemDetailView;
 import com.gsy.shop.Models.OrderRecord;
 import com.gsy.shop.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class OrderController {
 
@@ -26,8 +29,8 @@ public class OrderController {
                                 @RequestBody Map<String, String> productsParam) {
 
         Map<Integer, Integer> products = new HashMap<>();
-        productsParam.forEach((key, value) ->
-            products.put(Integer.parseInt(key), Integer.parseInt(value))
+        productsParam.forEach((id, count) ->
+            products.put(Integer.parseInt(id), Integer.parseInt(count))
         );
         return orderService.addOrder(userId, storeId, products);
     }
@@ -48,5 +51,11 @@ public class OrderController {
     public String saveOrder() {
 
         return "order add success";
+    }
+
+    @GetMapping("/order/items/{id}")
+    public List<OrderItemDetailView> getItems(@PathVariable("id") Integer id) {
+
+        return orderService.getItems(id);
     }
 }

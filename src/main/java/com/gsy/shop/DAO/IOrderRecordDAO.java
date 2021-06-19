@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface IOrderRecordDAO extends JpaRepository<OrderRecord, Integer> {
 
-    List<OrderRecord> findAllByUserId(@NonNull Integer id);
 }

@@ -1,5 +1,6 @@
 package com.gsy.shop.Controllers;
 
+import com.gsy.shop.Exception.ResourceNotFoundException;
 import com.gsy.shop.Models.Order;
 import com.gsy.shop.Models.User;
 import com.gsy.shop.Services.UserService;
@@ -8,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
 
@@ -49,6 +52,21 @@ public class UserController {
 
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> map) {
+        User user;
+        if (!map.containsKey("email") || !map.containsKey("password")) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            try {
+                user = userService.login(map.get("email"), map.get("password"));
+            } catch (ResourceNotFoundException e) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        return ResponseEntity.ok(user);
     }
 
     @RequestMapping("/test/user")

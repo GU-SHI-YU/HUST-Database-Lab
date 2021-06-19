@@ -19,5 +19,7 @@ public class OrderRecord {
     private Integer storeId;
     @Column(name = "user_id")
     private Integer userId;
+    @Column
+    private Double amount;
 
 }
