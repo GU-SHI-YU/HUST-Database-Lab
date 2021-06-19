@@ -1,0 +1,8 @@
+.ant-carousel,
+.ant-carousel .slick-slide,
+.ant-carousel .slick-list{
+    position:absolute;
+    width: 1226px;
+    height: 460px;
+    overflow: hidden;
+}
