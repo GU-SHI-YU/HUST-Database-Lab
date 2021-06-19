@@ -25,6 +25,7 @@ export async function fetchByStore(s_id: number) {
       newP.picture = product.picture;
       newP.price = product.price;
       newP.type = product.type;
+      newP.stack = product.stack;
       newP.num = 0;
       return newP;
     })

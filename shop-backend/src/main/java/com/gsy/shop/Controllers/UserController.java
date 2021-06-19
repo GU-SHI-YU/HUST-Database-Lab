@@ -2,6 +2,7 @@ package com.gsy.shop.Controllers;
 
 import com.gsy.shop.Exception.ResourceNotFoundException;
 import com.gsy.shop.Models.Order;
+import com.gsy.shop.Models.StoreManagerDetailView;
 import com.gsy.shop.Models.User;
 import com.gsy.shop.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,12 @@ public class UserController {
             }
         }
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/user/manage/{id}")
+    public List<StoreManagerDetailView> getManaged(@PathVariable("id") Integer id) {
+
+        return userService.getManaged(id);
     }
 
     @RequestMapping("/test/user")

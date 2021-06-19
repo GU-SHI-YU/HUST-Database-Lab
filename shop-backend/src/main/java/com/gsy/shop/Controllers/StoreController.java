@@ -22,7 +22,7 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-    @PutMapping("/store/item")
+    @PutMapping("/store/item/add")
     public StoreItem addItem(@RequestBody StoreItem storeItem) {
 
         return storeService.addItem(storeItem);
@@ -83,5 +83,19 @@ public class StoreController {
     public List<StoreItemDetailView> getItem(@PathVariable("id") Integer id) {
 
         return storeService.getItems(id);
+    }
+
+    @PutMapping("/store/item/update")
+    public ResponseEntity<?> updateItem(@RequestBody StoreItem newStoreItem) {
+
+        StoreItem storeItem = storeService.updateItem(newStoreItem);
+        return ResponseEntity.ok(storeItem);
+    }
+
+    @DeleteMapping("/store/item")
+    public ResponseEntity<?> deleteItem(@RequestBody StoreItem delStoreItem) {
+
+        storeService.deleteItem(delStoreItem);
+        return ResponseEntity.ok().build();
     }
 }

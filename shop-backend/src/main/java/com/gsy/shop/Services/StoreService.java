@@ -109,4 +109,20 @@ public class StoreService {
 
         return storeItemDetailViewDAO.findAllByStoreId(id);
     }
+
+    public StoreItem updateItem(@NonNull StoreItem newStoreItem) {
+
+        StoreItem storeItem = storeItemDAO.findStoreItemByStoreIdAndProductId(newStoreItem.getStoreId(),
+                newStoreItem.getProductId());
+        storeItem.setDiscount(newStoreItem.getDiscount());
+        storeItem.setStack(newStoreItem.getStack());
+        return storeItemDAO.save(storeItem);
+    }
+
+    public void deleteItem(@NonNull StoreItem delStoreItem) {
+
+        StoreItem storeItem = storeItemDAO.findStoreItemByStoreIdAndProductId(delStoreItem.getStoreId(),
+                delStoreItem.getProductId());
+        storeItemDAO.delete(storeItem);
+    }
 }

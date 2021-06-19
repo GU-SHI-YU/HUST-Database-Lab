@@ -129,7 +129,7 @@ export default function ProductList() {
       <List className={classes.root} component='nav'> {
         nums.length !== dataList.length ? null :
         dataList.map((shop: Store, s_index: number) => {
-          const labelId = `shop-ist-label=${s_index}`;
+          const labelId = `shop-list-label=${s_index}`;
           return (
             <React.Fragment>
               {/* {s_index !== 0 ? <Divider variant='inset' component='li' /> : <CssBaseline />} */}

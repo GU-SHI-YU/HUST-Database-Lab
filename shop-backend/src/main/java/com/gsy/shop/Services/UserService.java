@@ -18,16 +18,19 @@ public class UserService {
     private final IUserDAO userDAO;
     private final IOrderRecordViewDAO orderRecordViewDAO;
     private final IOrderDAO orderDAO;
+    private final IStoreManagerDetailViewDAO storeManagerDetailViewDAO;
 
 
     @Autowired
     public UserService(IUserDAO userDAO,
                        IOrderRecordViewDAO orderRecordViewDAO,
-                       IOrderDAO orderDAO) {
+                       IOrderDAO orderDAO,
+                       IStoreManagerDetailViewDAO storeManagerDetailViewDAO) {
 
         this.userDAO = userDAO;
         this.orderRecordViewDAO = orderRecordViewDAO;
         this.orderDAO = orderDAO;
+        this.storeManagerDetailViewDAO = storeManagerDetailViewDAO;
     }
 
     public void deleteUser(@NonNull Integer id) {
@@ -70,5 +73,10 @@ public class UserService {
 
         return userDAO.findUserByEmailAndPassword(email, password)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "email, password", email + "," + password));
+    }
+
+    public List<StoreManagerDetailView> getManaged(@NonNull Integer id) {
+
+        return storeManagerDetailViewDAO.findAllByUserId(id);
     }
 }

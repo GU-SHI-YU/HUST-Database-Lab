@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface IStoreItemDAO extends JpaRepository<StoreItem, Integer> {
 
     Optional<StoreItem> findStoreItemByProductId(@NonNull Integer productId);
+    StoreItem findStoreItemByStoreIdAndProductId(@NonNull Integer storeId, @NonNull Integer productId);
 }

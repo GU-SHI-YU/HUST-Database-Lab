@@ -1,13 +1,17 @@
-import { Avatar, Collapse, createStyles, CssBaseline, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Avatar, Collapse, createStyles, CssBaseline, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, Theme, Typography } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { fetchAllOrders } from '../api/OrderList';
 import Order from '../model/Order';
 import Product from '../model/Product';
+import Store from '../model/Store';
+import { fetchStoreByUser } from '../api/StoreList';
 
-interface OrderListProps {
+interface StoreListProps {
   u_id: number;
 }
 
@@ -39,15 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function OrderList(props: OrderListProps) {
+export default function StoreList(props: StoreListProps) {
   const classes = useStyles();
-  const [dataList, setDataList] = useState<Order[]>([] as any[]);
+  const [dataList, setDataList] = useState<Store[]>([] as any[]);
   const [opened, setOpened] = useState<number[]>([] as number[]);
 
   async function update() {
-    await fetchAllOrders(props.u_id)
+    await fetchStoreByUser(props.u_id)
       .then((ret) => {
-      setDataList(ret as Order[]);
+      setDataList(ret as Store[]);
     });
   }
 
@@ -58,12 +62,12 @@ export default function OrderList(props: OrderListProps) {
     // eslint-disable-next-line
   }, [props.u_id]) ;
 
-  const handleClick = (o_index: number) => () => {
-    const currentIndex = opened.indexOf(o_index);
+  const handleClick = (s_index: number) => () => {
+    const currentIndex = opened.indexOf(s_index);
     const newOpened = [...opened];
 
     if (currentIndex === -1) {
-      newOpened.push(o_index);
+      newOpened.push(s_index);
     } else {
       newOpened.splice(currentIndex, 1);
     }
@@ -81,9 +85,9 @@ export default function OrderList(props: OrderListProps) {
           alignItems='center' 
           spacing={3}
         >
-          <AddShoppingCartIcon className={classes.message}/>
+          <AssignmentIndIcon className={classes.message}/>
           <Typography display='inline' className={classes.message}>
-            您还没有订单
+            您不是任何商店的管理员
           </Typography>
         </Grid>
       </React.Fragment>
@@ -93,22 +97,22 @@ export default function OrderList(props: OrderListProps) {
   return (
     <React.Fragment>
       <List className={classes.root} component='nav'> {
-        dataList.map((order: Order, o_index: number) => {
-          const labelId = `order-list-label=${o_index}`;
+        dataList.map((store: Store, s_index: number) => {
+          const labelId = `store-list-label=${s_index}`;
           return (
             <React.Fragment>
               {/* {s_index !== 0 ? <Divider variant='inset' component='li' /> : <CssBaseline />} */}
-              <ListItem button={true} onClick={handleClick(o_index)} key={labelId}>
+              <ListItem button={true} onClick={handleClick(s_index)} key={labelId}>
                 <ListItemText 
-                  primary={order.s_name}
-                  secondary={'订单编号：' + order.id.toString()}
+                  primary={store.name}
+                  secondary={'店长：' + store.ownerName}
                 />
-                {opened.indexOf(o_index) !== -1 ? <ExpandLess /> : <ExpandMore />}
+                {opened.indexOf(s_index) !== -1 ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse in={opened.indexOf(o_index) !== -1} timeout='auto' unmountOnExit>
+              <Collapse in={opened.indexOf(s_index) !== -1} timeout='auto' unmountOnExit>
                 <List component='div' disablePadding> {
-                  order.products.map((product: Product, p_index: number) => {
-                    const labelIdP = `product-list-order${o_index}-label=${p_index}`;
+                  store.products.map((product: Product, p_index: number) => {
+                    const labelIdP = `product-list-shop${s_index}-label=${p_index}`;
                     return (
                       <React.Fragment>
                         {p_index !== 0 ? <Divider variant='inset' component='li' /> : <CssBaseline />}
@@ -132,6 +136,14 @@ export default function OrderList(props: OrderListProps) {
                               </React.Fragment>
                             }
                           />
+                          <ListItemSecondaryAction>
+                            <IconButton>
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton>
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
                         </ListItem>
                       </React.Fragment>
                     )
