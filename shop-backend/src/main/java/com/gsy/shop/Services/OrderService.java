@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class OrderService {
 
     private final IOrderDAO orderDAO;
-    private final IStoreItemDAO storeItemDAO;
     private final IProductDAO productDAO;
     private final IOrderItemDAO orderItemDAO;
     private final IOrderRecordDAO orderRecordDAO;
@@ -26,7 +25,6 @@ public class OrderService {
 
     @Autowired
     public OrderService(IOrderDAO orderDAO,
-                        IStoreItemDAO storeItemDAO,
                         IProductDAO productDAO,
                         IOrderItemDAO orderItemDAO,
                         IOrderRecordDAO orderRecordDAO,
@@ -35,7 +33,6 @@ public class OrderService {
         this.orderDAO = orderDAO;
         this.productDAO = productDAO;
         this.orderItemDAO = orderItemDAO;
-        this.storeItemDAO = storeItemDAO;
         this.orderRecordDAO = orderRecordDAO;
         this.orderItemDetailViewDAO = orderItemDetailViewDAO;
     }
@@ -48,10 +45,7 @@ public class OrderService {
     public Order updateOrder(@NonNull Integer id, @NonNull Order newOrder) {
 
         Order order = orderDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
-        order.setConfirmedTime(newOrder.getConfirmedTime());
-        order.setFinishedTime(newOrder.getFinishedTime());
         order.setCreatedTime(newOrder.getCreatedTime());
-        order.setPurchasedTime(newOrder.getPurchasedTime());
         order.setStatus(newOrder.getStatus());
         return orderDAO.save(order);
     }
@@ -62,18 +56,22 @@ public class OrderService {
 
         AtomicReference<Double> orderAmount = new AtomicReference<>(0.0);
         Order order = new Order();
+        order.setStatus(Status.CREATED);
         orderDAO.save(order);
         Integer orderId = order.getId();
         products.forEach((productId, count) -> {
 
             Product product = productDAO.findById(productId)
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
-            StoreItem storeItem = storeItemDAO.findStoreItemByProductId(productId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Store item", "product id", productId));
+            if (product.getStack() == 0) {
+                throw new ResourceNotFoundException("Product", "stack", 0);
+            }
+            product.setStack(product.getStack() - 1);
+            productDAO.save(product);
             OrderItem orderItem = new OrderItem();
             orderItem.setOrderId(orderId);
             orderItem.setProductId(productId);
-            double amount = product.getPrice() * count * storeItem.getDiscount();
+            double amount = product.getPrice() * count * product.getDiscount();
             orderItem.setAmount(amount);
             orderAmount.updateAndGet(v -> v + amount);
             orderItem.setCount(count);

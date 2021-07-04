@@ -2,6 +2,7 @@ package com.gsy.shop.Controllers;
 
 import com.gsy.shop.Exception.ResourceNotFoundException;
 import com.gsy.shop.Models.Order;
+import com.gsy.shop.Models.OrderRecordView;
 import com.gsy.shop.Models.StoreManagerDetailView;
 import com.gsy.shop.Models.User;
 import com.gsy.shop.Services.UserService;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/user/orders/{id}")
-    public List<Order> getUserOrder(@PathVariable("id") Integer id) {
+    public List<OrderRecordView> getUserOrder(@PathVariable("id") Integer id) {
 
         return userService.getUserOrder(id);
     }

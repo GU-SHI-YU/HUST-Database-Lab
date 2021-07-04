@@ -2,6 +2,7 @@ package com.gsy.shop.Models;
 
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
@@ -22,17 +23,7 @@ public class Order {
     private Status status;
     @Column(name = "created_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @Generated(GenerationTime.INSERT)
+    @CreationTimestamp
     private Date createdTime;
-    @Column(name = "purchased_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date purchasedTime;
-    @Column(name = "confirmed_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date confirmedTime;
-    @Column(name = "finished_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date finishedTime;
-
 
 }

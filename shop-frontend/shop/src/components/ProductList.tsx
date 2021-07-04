@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { fetchAllStores, putOrder } from '../api/ProductList';
 import Product from '../model/Product';
 import Store from '../model/Store';
+import ProductDetail from './ProductDetail';
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -38,6 +39,8 @@ export default function ProductList() {
   const [nums, setNums] = useState<number[][]>([] as number[][]);
   const [buyed, setBuyed] = useState(false);
   const [buyedContext, setBuyedContext] = useState('');
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [curProduct, setCurProduct] = useState<Product>({} as Product);
 
   async function update() {
     await fetchAllStores()
@@ -120,8 +123,17 @@ export default function ProductList() {
     });
   }
 
-  const handleClose = () => () => {
+  const handleClose = () => {
     setBuyed(false);
+  }
+
+  const handleDetail = (s_index: number, p_index: number) => () => {
+    setCurProduct(dataList[s_index].products[p_index]);
+    setDetailOpen(true);
+  }
+
+  const handleDetailClose = () => {
+    setDetailOpen(false);
   }
 
   return (
@@ -154,13 +166,14 @@ export default function ProductList() {
               </ListItem>
               <Collapse in={opened.indexOf(s_index) !== -1} timeout='auto' unmountOnExit>
                 <List component='div' disablePadding> {
+                  shop.products === undefined ? null :
                   shop.products.map((product: Product, p_index: number) => {
                     const labelIdP = `product-list-shop${s_index}-label=${p_index}`;
                     const labelIdI = `input-list-shop${s_index}=label=${p_index}`;
                     return (
                       <React.Fragment>
                         {p_index !== 0 ? <Divider variant='inset' component='li' /> : <CssBaseline />}
-                        <ListItem alignItems='flex-start' className={classes.nested} key={labelIdP}>
+                        <ListItem alignItems='flex-start' className={classes.nested} key={labelIdP} button onClick={handleDetail(s_index, p_index)}>
                           <ListItemAvatar>
                             <Avatar src={product.picture} />
                           </ListItemAvatar>
@@ -234,11 +247,12 @@ export default function ProductList() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose()} >
+          <Button onClick={handleClose} >
             确认
           </Button>
         </DialogActions>
       </Dialog>
+      <ProductDetail open={detailOpen} product={curProduct} onClose={handleDetailClose}/>
     </React.Fragment>
   )
 

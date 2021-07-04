@@ -16,10 +16,6 @@ public class StoreItem {
 
     @Column(name = "product_id")
     private Integer productId;
-    @Column
-    private Integer stack;
-    @ColumnDefault("1.0")
-    private Double discount;
     @Column(name = "store_id")
     private Integer storeId;
 

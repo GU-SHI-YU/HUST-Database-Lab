@@ -101,12 +101,13 @@ export default function OrderList(props: OrderListProps) {
               <ListItem button={true} onClick={handleClick(o_index)} key={labelId}>
                 <ListItemText 
                   primary={order.s_name}
-                  secondary={'订单编号：' + order.id.toString()}
+                  secondary={'订单编号：' + order.id.toString() + ' 总价：' + order.amount.toString()}
                 />
                 {opened.indexOf(o_index) !== -1 ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={opened.indexOf(o_index) !== -1} timeout='auto' unmountOnExit>
                 <List component='div' disablePadding> {
+                  order.products === undefined ? null :
                   order.products.map((product: Product, p_index: number) => {
                     const labelIdP = `product-list-order${o_index}-label=${p_index}`;
                     return (
@@ -142,6 +143,7 @@ export default function OrderList(props: OrderListProps) {
           )
         })
       } </List>
+      {/* <ProductDetail open={detailOpen} product={curProduct} onClose={handleDetailClose}/> */}
     </React.Fragment>
   )
 

@@ -5,6 +5,8 @@ import com.gsy.shop.Models.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TypeService {
 
@@ -14,6 +16,11 @@ public class TypeService {
     public TypeService(ITypeDAO typeDAO) {
 
         this.typeDAO = typeDAO;
+    }
+
+    public List<Type> getAll() {
+
+        return typeDAO.findAll();
     }
 
     public void addType(Type type) {

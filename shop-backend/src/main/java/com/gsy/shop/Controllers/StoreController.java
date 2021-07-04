@@ -1,5 +1,6 @@
 package com.gsy.shop.Controllers;
 
+import com.gsy.shop.Models.Product;
 import com.gsy.shop.Models.Store;
 import com.gsy.shop.Models.StoreItem;
 import com.gsy.shop.Models.StoreItemDetailView;
@@ -22,10 +23,12 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-    @PutMapping("/store/item/add")
-    public StoreItem addItem(@RequestBody StoreItem storeItem) {
+    @PutMapping("/store/item/add/{storeId}/type/{typeId}")
+    public StoreItem addItem(@PathVariable("storeId") Integer storeId,
+                             @PathVariable("typeId") Integer typeId,
+                             @RequestBody Product product) {
 
-        return storeService.addItem(storeItem);
+        return storeService.addItem(storeId, typeId, product);
     }
 
     @GetMapping("/stores/type/{type}")
@@ -86,10 +89,10 @@ public class StoreController {
     }
 
     @PutMapping("/store/item/update")
-    public ResponseEntity<?> updateItem(@RequestBody StoreItem newStoreItem) {
+    public ResponseEntity<?> updateItem(@RequestBody Product newProduct) {
 
-        StoreItem storeItem = storeService.updateItem(newStoreItem);
-        return ResponseEntity.ok(storeItem);
+        Product product = storeService.updateItem(newProduct);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/store/item")

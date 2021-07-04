@@ -15,7 +15,6 @@ export async function fetchByOrder(o_id: number) {
     }
   }).then(json => {
     let ret = json;
-    console.log("p", json);
     return ret.map((product: any) => {
       let newP: Product = new Product();
       newP.id = product.productId;
@@ -44,7 +43,6 @@ export async function fetchAllOrders(u_id: number) {
     }
   }).then(async json => {
     let orders = json;
-    console.log(json);
     return Promise.all(orders.map(async (order: any) => {
       let newO: Order = new Order(); 
       await fetchByOrder(order.id)

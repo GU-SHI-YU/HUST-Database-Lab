@@ -2,9 +2,7 @@ package com.gsy.shop.Services;
 
 import com.gsy.shop.DAO.*;
 import com.gsy.shop.Exception.ResourceNotFoundException;
-import com.gsy.shop.Models.Store;
-import com.gsy.shop.Models.StoreItem;
-import com.gsy.shop.Models.StoreItemDetailView;
+import com.gsy.shop.Models.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,7 @@ public class StoreService {
     private final IStoreTypeDAO storeTypeDAO;
     private final ITypeDAO typeDAO;
     private final IStoreItemDetailViewDAO storeItemDetailViewDAO;
+    private final IProductTypeDAO productTypeDAO;
 
     @Autowired
     public StoreService(IStoreDAO storeDAO,
@@ -31,7 +30,8 @@ public class StoreService {
                         IStoreTypeDAO storeTypeDAO,
                         ITypeDAO typeDAO,
                         IProductDAO productDAO,
-                        IStoreItemDetailViewDAO storeItemDetailViewDAO) {
+                        IStoreItemDetailViewDAO storeItemDetailViewDAO,
+                        IProductTypeDAO productTypeDAO) {
 
         this.storeDAO = storeDAO;
         this.storeItemDAO = storeItemDAO;
@@ -39,6 +39,7 @@ public class StoreService {
         this.typeDAO = typeDAO;
         this.productDAO = productDAO;
         this.storeItemDetailViewDAO = storeItemDetailViewDAO;
+        this.productTypeDAO = productTypeDAO;
     }
 
 
@@ -53,7 +54,7 @@ public class StoreService {
         Store store = storeDAO.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", "id", id));
         store.setName(newStore.getName());
         store.setDescription(newStore.getDescription());
-        store.setOwnerId(newStore.getOwnerId());
+        // store.setOwnerId(newStore.getOwnerId());
         return storeDAO.save(store);
     }
 
@@ -98,10 +99,23 @@ public class StoreService {
         return stores;
     }
 
-    public StoreItem addItem(@NonNull StoreItem storeItem) {
+    public StoreItem addItem(@NonNull Integer storeId, @NonNull Integer typeId, @NonNull Product newProduct) {
 
-        Integer productId = storeItem.getProductId();
-        productDAO.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        Product product = new Product();
+        product.setPrice(newProduct.getPrice());
+        product.setDescription(newProduct.getDescription());
+        product.setPicture(newProduct.getPicture());
+        product.setName(newProduct.getName());
+        product.setDiscount(newProduct.getDiscount());
+        product.setStack(newProduct.getStack());
+        product = productDAO.save(product);
+        StoreItem storeItem = new StoreItem();
+        storeItem.setStoreId(storeId);
+        storeItem.setProductId(product.getId());
+        ProductType productType = new ProductType();
+        productType.setProductId(product.getId());
+        productType.setTypeId(typeId);
+        productTypeDAO.save(productType);
         return storeItemDAO.save(storeItem);
     }
 
@@ -110,13 +124,17 @@ public class StoreService {
         return storeItemDetailViewDAO.findAllByStoreId(id);
     }
 
-    public StoreItem updateItem(@NonNull StoreItem newStoreItem) {
+    public Product updateItem(@NonNull Product newProduct) {
 
-        StoreItem storeItem = storeItemDAO.findStoreItemByStoreIdAndProductId(newStoreItem.getStoreId(),
-                newStoreItem.getProductId());
-        storeItem.setDiscount(newStoreItem.getDiscount());
-        storeItem.setStack(newStoreItem.getStack());
-        return storeItemDAO.save(storeItem);
+        Product product = productDAO.findById(newProduct.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", newProduct.getId()));
+        product.setPrice(newProduct.getPrice());
+        product.setDescription(newProduct.getDescription());
+        product.setPicture(newProduct.getPicture());
+        product.setName(newProduct.getName());
+        product.setDiscount(newProduct.getDiscount());
+        product.setStack(newProduct.getStack());
+        return productDAO.save(product);
     }
 
     public void deleteItem(@NonNull StoreItem delStoreItem) {

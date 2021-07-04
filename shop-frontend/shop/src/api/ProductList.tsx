@@ -56,7 +56,7 @@ export async function fetchAllStores() {
           newS.id = store.id;
           newS.name = store.name;
           newS.description = store.description;
-          newS.type = newS.products[0].type;
+          newS.type = newS.products.length === 0 ? newS.type = '其他' : newS.products[0].type;
         })
       return newS;
     }));

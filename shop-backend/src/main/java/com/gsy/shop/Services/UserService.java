@@ -60,13 +60,13 @@ public class UserService {
         return userDAO.save(user);
     }
 
-    public List<Order> getUserOrder(@NonNull Integer id) {
+    public List<OrderRecordView> getUserOrder(@NonNull Integer id) {
 
         List<OrderRecordView> orderRecordViews = orderRecordViewDAO.findAllByUserId(id);
         List<Order> orders = new ArrayList<>();
         orderRecordViews.forEach(orderRecordView -> orders.add(orderDAO.findById(orderRecordView.getId())
             .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id))));
-        return orders;
+        return orderRecordViews;
     }
 
     public User login(@NonNull String email, @NonNull String password) {

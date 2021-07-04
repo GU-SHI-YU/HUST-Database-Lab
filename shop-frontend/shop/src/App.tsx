@@ -12,11 +12,11 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Inbox from '@material-ui/icons/Inbox';
 import ProductList from './components/ProductList';
-import Store from './model/Store';
 import { useState } from 'react';
 import { login } from './api/Login';
 import User from './model/User';
 import UserDetail from './components/UserDetail';
+import StoreList from './components/StoreList';
 
 export interface Props {
   children?: React.ReactElement;
@@ -97,67 +97,7 @@ function HideOnScroll(props: Props) {
   );
 }
 
-const shops: Store[] = [
-  {
-    id: 1,
-    name: '食品店',
-    description: '一家食品店',
-    type: '食品',
-    products: [
-      {
-        id: 1,
-        name: '麻花',
-        description: '天津产麻花',
-        type: '食品',
-        price: 10.0,
-        discount: 1.0,
-        num: 2,
-        picture: 'http://ali.xinshipu.cn/20180114/original/1515903253660.jpg'
-      },
-      {
-        id: 2,
-        name: '包子',
-        description: '天津产包子',
-        type: '食品',
-        price: 15.0,
-        discount: 0.8,
-        num: 3,
-        picture: 'http://image.uc.cn/s/wemedia/s/upload/2020/c0010a8b6bc212369bb35cba223393ee.jpg'
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: '服装店',
-    description: '一家服装店',
-    type: '服装',
-    products: [
-      {
-        id: 3,
-        name: '西装',
-        description: '美国产西装',
-        type: '服装',
-        price: 1000.0,
-        discount: 1.0,
-        num: 1,
-        picture: 'https://www.wgnds.com/wp-content/uploads/2020/03/%E5%8D%95%E6%8E%92%E6%89%A3%E8%A5%BF%E8%A3%85-705x1024.jpg'
-      },
-      {
-        id: 4,
-        name: '连衣裙',
-        description: '日本产连衣裙',
-        type: '服装',
-        price: 150.0,
-        discount: 0.85,
-        num: 2,
-        picture: 'https://s5.mogucdn.com/mlcdn/55cf19/210416_1akgd8b39bi8796bi069a351i30i5_640x960.jpg'
-      },
-    ],
-  },
-]
-
 export default function App(props: Props) {
-  shops[0].id = 1;
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -218,6 +158,11 @@ export default function App(props: Props) {
     setPage(p_index);
   }
 
+  const handleLogOut = () => {
+    setUser({} as User);
+    setLogined(false);
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -241,6 +186,7 @@ export default function App(props: Props) {
                 {titles[page]}
             </Typography>
             {logined ? <Avatar alt={user.name} src={user.profile} className={classes.avatar}/> : <Button color="inherit" onClick={handleLoginOpen}>登录</Button>}
+            {logined ? <Button color="inherit" onClick={handleLogOut}>登出</Button> : null}
             <Dialog
               open={loginFail}
               onClose={handleLoginFailClose}
@@ -332,7 +278,7 @@ export default function App(props: Props) {
             <ProductList /> : 
           page === 1 ?
             <UserDetail user={user}/> : 
-            null
+            <StoreList u_id={user.id}/>
         } </div>
     </div>
   )

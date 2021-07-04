@@ -30,6 +30,6 @@ public class StoreItemDetailView {
     private String picture;
     @Column
     private Double price;
-    @Column(name = "type_name")
+    @Column
     private String type;
 }
